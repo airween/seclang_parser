@@ -132,6 +132,7 @@ stmt_audit_log:
 
 config_value_types:
     QUOTE values QUOTE
+    | values
     ;
 
 values:
@@ -148,6 +149,7 @@ values:
     | CONFIG_VALUE_DETC
     | CONFIG_VALUE_PROCESS_PARTIAL
     | CONFIG_VALUE_REJECT
+    | INT
     ;
 // | CONFIG_VALUE_PATH
 operator:
