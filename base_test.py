@@ -11,7 +11,11 @@ class Rule:
 class SecLangListener(SecLangParserListener):
     def enterStmt(self, ctx):
         print("Entering statement:", ctx.getText())
-        Rule(variables, operators, actions)
+        #print(dir(ctx))
+        #Rule(variables, operators, actions)
+
+    def enterEngine_config_directive(self, ctx):
+        print("Entering engine config directive:", ctx.getText())
 
     def enterAction(self, ctx:SecLangParser.ActionContext):
         print("Entering action:", ctx.getText())
