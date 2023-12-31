@@ -11,8 +11,10 @@ class Rule:
 class SecLangListener(SecLangParserListener):
     def enterStmt(self, ctx):
         print("Entering statement:", ctx.getText())
-        #print(dir(ctx))
         #Rule(variables, operators, actions)
+
+    def enterActions_directive(self, ctx):
+        print("Entering actions directive:", ctx.getText())
 
     def enterEngine_config_directive(self, ctx):
         print("Entering engine config directive:", ctx.getText())
@@ -23,18 +25,59 @@ class SecLangListener(SecLangParserListener):
     def enterConfig_value_types(self, ctx:SecLangParser.Config_value_typesContext):
         print("Entering config value:", ctx.getText())
 
+class MySecLangLexer(SecLangLexer):
+    def nextToken(self):
+        token = super().nextToken()
+        print(f"Recognized Token: {self.symbolicNames[token.type]} - {token.text}")
+        return token
+
+    def print_current_state(self):
+        print(f"Current Token Type: {self._input.LT(1).type}")
+
+class MySecLangListener(SecLangListener):
+    def __init__(self):
+        self.rule_stack = []
+
+    def enterEveryRule(self, ctx):
+        rule_name = SecLangParser.ruleNames[ctx.getRuleIndex()]
+        self.rule_stack.append(rule_name)
+        print(f"Entering rule: {self.rule_stack}")
+
+    def exitEveryRule(self, ctx):
+        rule_name = SecLangParser.ruleNames[ctx.getRuleIndex()]
+        if self.rule_stack and self.rule_stack[-1] == rule_name:
+            self.rule_stack.pop()
+        print(f"Exiting rule: {self.rule_stack}")
+
+    #def visitTerminal(self, node):
+    #    print(f"Terminal: {node.getText()}")
 
 def main(argv):
+    debug_lexer = False
+    debug_parser = False
     if len(sys.argv) > 1:
-        input = FileStream(sys.argv[1])
+        input = FileStream(sys.argv[1], encoding='utf-8')
+        if len(sys.argv) > 2:
+            for a in sys.argv[2:]:
+                if a == "debuglexer":
+                    debug_lexer = True
+                if a == "debugparser":
+                    debug_parser = True
     else:
         input = InputStream(sys.stdin.readline())
-    lexer = SecLangLexer(input)
+    if debug_lexer == True:
+        lexer = MySecLangLexer(input)
+    else:
+        lexer = SecLangLexer(input)
     stream = CommonTokenStream(lexer)
+
     parser = SecLangParser(stream)
     tree = parser.configuration()
     # walk and print
-    printer = SecLangListener()
+    if debug_parser == True:
+        printer = MySecLangListener()
+    else:
+        printer = SecLangListener()
     walker = ParseTreeWalker()
     walker.walk(printer, tree)
 
