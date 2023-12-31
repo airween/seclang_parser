@@ -39,6 +39,7 @@ configuration
 stmt:
     rules_directive variables operator actions
     | engine_config_directive config_value_types
+    | actions_directive actions
     | COMMENT;
 
 rules_directive:
@@ -51,6 +52,11 @@ rules_directive:
     | CONFIG_SEC_RULE_UPDATE_TARGET_BY_TAG
     | DIRECTIVE
     | DIRECTIVE_SECRULESCRIPT
+    ;
+
+actions_directive:
+    CONFIG_DIR_SEC_DEFAULT_ACTION
+    | CONFIG_DIR_SEC_ACTION
     ;
 
 engine_config_directive:
@@ -76,10 +82,8 @@ engine_config_directive:
     | CONFIG_DIR_RES_BODY_LIMIT
     | CONFIG_DIR_RES_BODY_LIMIT_ACTION
     | CONFIG_DIR_RULE_ENG
-    | CONFIG_DIR_SEC_ACTION
     | CONFIG_DIR_SEC_COOKIE_FORMAT
     | CONFIG_DIR_SEC_DATA_DIR
-    | CONFIG_DIR_SEC_DEFAULT_ACTION
     | CONFIG_DIR_SEC_MARKER
     | CONFIG_DIR_SEC_STATUS_ENGINE
     | CONFIG_DIR_SEC_TMP_DIR
@@ -206,7 +210,7 @@ variables:
     ;
 
 var_stmt:
-    variable_name (':' collection_element_or_regexp)? variable_value?
+    variable_name (COLON collection_element_or_regexp)? variable_value?
     ;
 
 collection_element_or_regexp:
@@ -329,6 +333,7 @@ actions:
 
 action:
     action_with_params COLON NOT? EQUAL? action_value
+    | action_with_params_and_args COLON setvar_action
     | action_only
     ;
 
@@ -366,7 +371,6 @@ action_with_params:
     | ACTION_SETRSC
     | ACTION_SETSID
     | ACTION_SETUID
-    | ACTION_SETVAR
     | ACTION_SEVERITY
     | ACTION_SKIP
     | ACTION_SKIP_AFTER
@@ -384,6 +388,10 @@ action_with_params:
     | ACTION_MSG
 
 ;
+
+action_with_params_and_args:
+    ACTION_SETVAR
+    ;
 
 action_value:
     INT
@@ -452,11 +460,13 @@ variable_value:
 
 setvar_action:
     SINGLE_QUOTE setvar_stmt assignment values SINGLE_QUOTE
+    | setvar_stmt assignment values
     ;
 
 setvar_stmt:
     COLLECTION_ELEMENT
     | COLLECTION_WITH_MACRO
+    | VARIABLE_NAME
     ;
 
 assignment:

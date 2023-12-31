@@ -62,6 +62,10 @@ SLASH
    : '/'
    ;
 
+COLON
+   : ':'
+   ;
+
 ASSIGN
    : ':='
    ;
@@ -72,10 +76,6 @@ COMMA
 
 SEMI
    : ';'
-   ;
-
-COLON
-   : ':'
    ;
 
 EQUAL
@@ -315,7 +315,7 @@ ACTION_SETUID
 	;
 
 ACTION_SETVAR
-	: 'setvar' -> mode(SETVAR)
+	: 'setvar' //-> mode(SETVAR)
 	;
 
 ACTION_SEVERITY
@@ -1594,7 +1594,7 @@ FREE_TEXT_QUOTE_MACRO_EXPANSION
     : ~([\\"] )+ -> popMode
     ;
 
-    mode CONFIG_STRING_VALUE;
+mode CONFIG_STRING_VALUE;
 
 CONFIG_STRING
     : ~([\\"])+ -> popMode
@@ -1606,10 +1606,15 @@ MACRO_EXPANSION
     : VARIABLE_NAME '}' -> popMode
 	;
 
-mode SETVAR;
+//mode SETVAR;
+mode DEFAULT_MODE;
+
+//M_SETVAR_COLON
+//	: ':'
+//	;
 
 COLLECTION_ELEMENT
-    : 'tx.' IDENT -> popMode
+    : 'tx.' ('A' .. 'Z') ('A' .. 'Z' | '0' .. '9' | '_')* //-> popMode
     ;
 
 COLLECTION_WITH_MACRO
