@@ -10,6 +10,9 @@ class Rule:
 
 class SecLangListener(SecLangParserListener):
     def enterStmt(self, ctx):
+        #for m in dir(self):
+        #    if m[0:5] == "enter":
+        #        print(m)
         print("Entering statement:", ctx.getText())
         #Rule(variables, operators, actions)
 
@@ -22,8 +25,26 @@ class SecLangListener(SecLangParserListener):
     def enterAction(self, ctx:SecLangParser.ActionContext):
         print("Entering action:", ctx.getText())
 
+    def enterAction_with_params_and_args(self, ctx:SecLangParser.ActionContext):
+        print("Entering action with params and args:", ctx.getText())
+
+    def enterSetvar_stmnt(self, ctx:SecLangParser.ActionContext):
+        print("Entering setvar statement:", ctx.getText())
+
+    def enterSetvar_stmt(self, ctx:SecLangParser.ActionContext):
+        print("Entering setvar statement:", ctx.getText())
+
+    def enterAssignment(self, ctx:SecLangParser.ActionContext):
+        print("Entering assignment:", ctx.getText())
+
+    def enterValues(self, ctx:SecLangParser.ActionContext):
+        print("Entering values:", ctx.getText())
+
     def enterConfig_value_types(self, ctx:SecLangParser.Config_value_typesContext):
         print("Entering config value:", ctx.getText())
+
+    def enterStmnt_comment(self, ctx):
+        print("Entering comment:", ctx.getText())
 
 class MySecLangLexer(SecLangLexer):
     def nextToken(self):
@@ -41,7 +62,7 @@ class MySecLangListener(SecLangListener):
     def enterEveryRule(self, ctx):
         rule_name = SecLangParser.ruleNames[ctx.getRuleIndex()]
         self.rule_stack.append(rule_name)
-        print(f"Entering rule: {self.rule_stack}")
+        print(f"Entering rule: {self.rule_stack} - '{ctx.getText()}'")
 
     def exitEveryRule(self, ctx):
         rule_name = SecLangParser.ruleNames[ctx.getRuleIndex()]
