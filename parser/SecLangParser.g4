@@ -136,6 +136,7 @@ stmt_audit_log:
 
 config_value_types:
     QUOTE values QUOTE
+    | M_CONFIG_STRING_QUOTE values QUOTE
     | values
     ;
 
@@ -154,6 +155,7 @@ values:
     | CONFIG_VALUE_PROCESS_PARTIAL
     | CONFIG_VALUE_REJECT
     | INT
+    | CONFIG_STRING
     ;
 // | CONFIG_VALUE_PATH
 operator:
@@ -461,6 +463,7 @@ variable_value:
 setvar_action:
     SINGLE_QUOTE setvar_stmt assignment values SINGLE_QUOTE
     | setvar_stmt assignment values
+    | STRING_LITERAL
     ;
 
 setvar_stmt:

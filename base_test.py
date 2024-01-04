@@ -43,8 +43,8 @@ class SecLangListener(SecLangParserListener):
     def enterConfig_value_types(self, ctx:SecLangParser.Config_value_typesContext):
         print("Entering config value:", ctx.getText())
 
-    def enterStmnt_comment(self, ctx):
-        print("Entering comment:", ctx.getText())
+    def enterSetvar_action(self, ctx:SecLangParser.Setvar_actionContext):
+        print("Entering setvar action:", ctx.getText())
 
 class MySecLangLexer(SecLangLexer):
     def nextToken(self):

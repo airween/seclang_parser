@@ -38,9 +38,9 @@ COMMENT
    : '#' .*? '\r'? '\n' -> skip
    ;
 
-SPACE
-    : ' '
-    ;
+//SPACE
+//    : ' '
+//    ;
 
 PIPE
     : '|'
@@ -1584,7 +1584,7 @@ DICT_ELEMENT_WITH_EQUALS
 	;
 
 DICT_ELEMENT_REGEXP
-    : SLASH DICT_ELEMENT_NO_PIPE SLASH (SPACE | PIPE)
+    : SLASH DICT_ELEMENT_NO_PIPE SLASH (' ' | PIPE)
     | SINGLE_QUOTE SLASH DICT_ELEMENT_WITH_PIPE SLASH SINGLE_QUOTE PIPE
     ;
 
@@ -1595,6 +1595,14 @@ FREE_TEXT_QUOTE_MACRO_EXPANSION
     ;
 
 mode CONFIG_STRING_VALUE;
+
+M_CONFIG_STRING_WS
+   : ([ \t\r\n]+ | '\\' '\n')  -> skip
+   ;
+
+M_CONFIG_STRING_QUOTE
+   : '"'
+   ;
 
 CONFIG_STRING
     : ~([\\"])+ -> popMode
